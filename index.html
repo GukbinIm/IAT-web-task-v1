@@ -22,17 +22,52 @@
     </script>
 
     <div id="root"></div>
-    
+
+    <!-- File input to upload CSV file -->
+    <input type="file" id="fileInput" accept=".csv" />
+    <button onclick="startExperiment()">Start Experiment</button>
+
+    <!-- Stimulus display -->
+    <div id="stimulusDisplay"></div>
+
     <!-- external libraries -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/preloadjs@1.0.1/lib/preloadjs.min.js"></script>
     
-    <!-- experiment -->
+    <!-- experiment script -->
     <script src="./SC-IAT.js" type="module"></script>
     
     <!-- legacy browsers -->
     <script src="./lib/psychojs-2024.2.4.iife.js" nomodule></script>
     <script src="./SC-IAT-legacy-browsers.js" nomodule></script>
+
+    <script>
+        // Function to handle file input and CSV parsing
+        function startExperiment() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                Papa.parse(file, {
+                    complete: function(results) {
+                        console.log("CSV data:", results.data);
+                        const stimulusData = results.data;  // Store the parsed data
+
+                        // Example: Display the first stimulus in the CSV file
+                        const firstStimulus = stimulusData[0];  // Get the first row of data
+                        document.getElementById("stimulusDisplay").innerText = `First Stimulus: ${firstStimulus.stimulus}`;
+                        
+                        // Now, you can integrate stimulusData into your experiment logic
+                        // For example, display all stimuli and start the IAT
+                    },
+                    header: true,  // Assuming the first row is the header
+                    dynamicTyping: true
+                });
+            } else {
+                alert("Please select a CSV file.");
+            }
+        }
+    </script>
   </body>
 </html>
